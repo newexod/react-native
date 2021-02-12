@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
+// expo install react-native-gesture-handler react-native-reanimated
 
 export default function App() {
   const [fontsLoaded] = useFonts({
