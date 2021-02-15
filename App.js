@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 // expo install react-native-gesture-handler react-native-reanimated
+
+import MealsNavigator from './navigation/MealsNavigator';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -11,14 +12,8 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return (
-      <AppLoading />
-    );
+    return <AppLoading />;
   }
 
-  return (
-    <View>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
+  return <MealsNavigator />;
 }
