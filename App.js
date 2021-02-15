@@ -6,7 +6,7 @@ import { enableScreens } from 'react-native-screens';
 
 import MealsNavigator from './navigation/MealsNavigator';
 
-enableScreens(); // more performed
+enableScreens(); // more performedz
 
 export default function App() {
   const [fontsLoaded] = useFonts({
