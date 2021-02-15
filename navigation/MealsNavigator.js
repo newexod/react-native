@@ -20,10 +20,7 @@ const MyStack = () => {
           component={CategoriesScreen}
           options={{
             headerTitle: "Meal Categories",
-            headerStyle: {
-              backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white'
-            },
-            headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor // цвет headerTitle
+            ...navigationOptions,
           }}
         />
         <Stack.Screen
@@ -36,10 +33,7 @@ const MyStack = () => {
 
             return {
               headerTitle: selectedCategory.title,
-              headerStyle: {
-                backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white'
-              },
-              headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor // цвет headerTitle
+              ...navigationOptions
             };
           }}
         />
@@ -50,6 +44,13 @@ const MyStack = () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
+};
+
+const navigationOptions = {
+  headerStyle: {
+    backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white'
+  },
+  headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor, // цвет headerTitle
 };
 
 export default MyStack;
