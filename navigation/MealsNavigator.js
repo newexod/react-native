@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 
 import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryMealsScreen from '../screens/CategoryMealsScreen';
@@ -73,7 +74,26 @@ const MyStack = () => {
 const MyTabs = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        tabBarOptions={tabBarOptions}
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            switch (route.name) {
+              case 'Meals':
+                iconName = 'ios-restaurant';
+                break;
+              case 'Favorites':
+                iconName = 'ios-star';
+                break;
+              default: break;
+            }
+
+            return <Ionicons name={iconName} size={25} color={color} />;
+          },
+        })}
+      >
         <Tab.Screen
           name="Meals"
           component={MyStack}
@@ -92,6 +112,10 @@ const navigationOptions = {
     backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white'
   },
   headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor, // цвет headerTitle
+};
+
+const tabBarOptions = {
+  activeTintColor: Colors.accentColor // цвет активного таба
 };
 
 export default MyTabs;
