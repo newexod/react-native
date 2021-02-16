@@ -2,11 +2,13 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryMealsScreen from '../screens/CategoryMealsScreen';
 import MealDetailScreen from '../screens/MealDetailScreen';
 import Colors from '../constants/Colors';
+import CustomHeaderButton from '../components/CustomHeaderButton';
 import { CATEGORIES, MEALS } from '../data/dummy-data';
 
 const Stack = createStackNavigator();
@@ -46,7 +48,19 @@ const MyStack = () => {
             const selectedMeal = MEALS.find(meal => meal.id === mealId);
 
             return {
-              headerTitle: selectedMeal.title
+              headerTitle: selectedMeal.title,
+              ...navigationOptions,
+              headerRight: () => (
+                <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                  <Item
+                    title="Favorite"
+                    iconName="ios-star"
+                    onPress={() => {
+                      console.log('Mark')
+                    }}
+                  />
+                </HeaderButtons>
+              )
             };
           }}
         />
