@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryMealsScreen from '../screens/CategoryMealsScreen';
@@ -15,7 +16,7 @@ import CustomHeaderButton from '../components/CustomHeaderButton';
 import { CATEGORIES, MEALS } from '../data/dummy-data';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab = Platform.OS === 'android' ? createMaterialBottomTabNavigator() : createBottomTabNavigator();
 
 const MyStack = () => {
   return (
@@ -71,11 +72,11 @@ const MyStack = () => {
   );
 };
 
-const MyTabs = () => {
+const iosTabs = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        tabBarOptions={tabBarOptions}
+        tabBarOptions={iosTabBarOptions}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -107,6 +108,43 @@ const MyTabs = () => {
   );
 };
 
+const androidTabs = () => {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        {...androidTabBarOptions}
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            switch (route.name) {
+              case 'Meals':
+                iconName = 'ios-restaurant';
+                break;
+              case 'Favorites':
+                iconName = 'ios-star';
+                break;
+              default: break;
+            }
+
+            return <Ionicons name={iconName} size={25} color={color} />;
+          },
+          tabBarColor: route.name === 'Meals' ? Colors.primaryColor : Colors.accentColor
+        })}
+      >
+        <Tab.Screen
+          name="Meals"
+          component={MyStack}
+        />
+        <Tab.Screen
+          name="Favorites"
+          component={FavoritesScreen}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
+
 const navigationOptions = {
   headerStyle: {
     backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white'
@@ -114,8 +152,18 @@ const navigationOptions = {
   headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor, // цвет headerTitle
 };
 
-const tabBarOptions = {
-  activeTintColor: Colors.accentColor // цвет активного таба
+const androidTabBarOptions = {
+  activeColor: 'white',
+  shifting: true,
+  barStyle: {
+    backgroundColor: Colors.primaryColor
+  }
 };
+
+const iosTabBarOptions = {
+  activeTintColor: Colors.accentColor,
+};
+
+const MyTabs = Platform.OS === 'android' ? androidTabs : iosTabs;
 
 export default MyTabs;
