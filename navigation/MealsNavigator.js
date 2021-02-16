@@ -18,7 +18,37 @@ import { CATEGORIES, MEALS } from '../data/dummy-data';
 const Stack = createStackNavigator();
 const Tab = Platform.OS === 'android' ? createMaterialBottomTabNavigator() : createBottomTabNavigator();
 
-const MyStack = () => {
+const MealDetail = () => {
+  return (
+    <Stack.Screen
+      name="MealDetail"
+      component={MealDetailScreen}
+      options={(navigationData) => {
+        const mealId = navigationData.route.params.mealId;
+
+        const selectedMeal = MEALS.find(meal => meal.id === mealId);
+
+        return {
+          headerTitle: selectedMeal.title,
+          ...navigationOptions,
+          headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+              <Item
+                title="Favorite"
+                iconName="ios-star"
+                onPress={() => {
+                  console.log('Mark')
+                }}
+              />
+            </HeaderButtons>
+          )
+        };
+      }}
+    />
+  );
+};
+
+const MealsStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -43,31 +73,23 @@ const MyStack = () => {
           };
         }}
       />
+      {MealDetail()}
+    </Stack.Navigator>
+  );
+};
+
+const FavNavigatorStack = () => {
+  return (
+    <Stack.Navigator>
       <Stack.Screen
-        name="MealDetail"
-        component={MealDetailScreen}
-        options={(navigationData) => {
-          const mealId = navigationData.route.params.mealId;
-
-          const selectedMeal = MEALS.find(meal => meal.id === mealId);
-
-          return {
-            headerTitle: selectedMeal.title,
-            ...navigationOptions,
-            headerRight: () => (
-              <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-                <Item
-                  title="Favorite"
-                  iconName="ios-star"
-                  onPress={() => {
-                    console.log('Mark')
-                  }}
-                />
-              </HeaderButtons>
-            )
-          };
+        name="Favorite"
+        component={FavoritesScreen}
+        options={{
+          headerTitle: "Your Favorites",
+          ...navigationOptions,
         }}
       />
+      {MealDetail()}
     </Stack.Navigator>
   );
 };
@@ -97,11 +119,11 @@ const iosTabs = () => {
       >
         <Tab.Screen
           name="Meals"
-          component={MyStack}
+          component={MealsStack}
         />
         <Tab.Screen
           name="Favorites"
-          component={FavoritesScreen}
+          component={FavNavigatorStack}
         />
       </Tab.Navigator>
     </NavigationContainer>
@@ -134,11 +156,11 @@ const androidTabs = () => {
       >
         <Tab.Screen
           name="Meals"
-          component={MyStack}
+          component={MealsStack}
         />
         <Tab.Screen
           name="Favorites"
-          component={FavoritesScreen}
+          component={FavNavigatorStack}
         />
       </Tab.Navigator>
     </NavigationContainer>
