@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -171,6 +171,9 @@ const iosTabs = () => {
 
           return <Ionicons name={iconName} size={25} color={color} />;
         },
+        tabBarLabel: ({ focused, color, size }) => {
+          return <Text style={{ fontFamily: 'open-sans-bold' }}>{route.name}</Text>
+        }
       })}
     >
       <Tab.Screen
@@ -181,7 +184,7 @@ const iosTabs = () => {
         name="Favorites"
         component={FavNavigatorStack}
       />
-    </Tab.Navigator>
+    </Tab.Navigator >
   );
 };
 
@@ -244,6 +247,12 @@ const navigationOptions = {
   headerStyle: {
     backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white'
   },
+  headerTitleStyle: {
+    fontFamily: 'open-sans-bold'
+  },
+  headerBackTitleStyle: {
+    fontFamily: 'open-sans'
+  },
   headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor, // цвет headerTitle
 };
 
@@ -256,6 +265,9 @@ const androidTabBarOptions = {
 };
 
 const iosTabBarOptions = {
+  labelStyle: {
+    fontFamily: 'open-sans-bold'
+  },
   activeTintColor: Colors.accentColor,
 };
 
