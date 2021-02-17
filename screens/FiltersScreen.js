@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Switch, Platform } from 'react-native';
 
 import Colors from '../constants/Colors';
@@ -18,10 +18,27 @@ const FilterSwitch = props => {
 };
 
 const FiltersScreen = props => {
+  const { navigation } = props;
+
   const [isGlutenFree, setIsGlutenFree] = useState(false);
   const [isLactoseFree, setIsLactoseFree] = useState(false);
-  const [isVeganFree, setIsVeganFree] = useState(false);
-  const [isVegeterianFree, setIsVegeterianFree] = useState(false);
+  const [isVegan, setIsVegan] = useState(false);
+  const [isVegeterian, setIsVegeterian] = useState(false);
+
+  const saveFilters = useCallback(() => {
+    const appliedFilters = {
+      glutenFree: isGlutenFree,
+      lactoseFree: isLactoseFree,
+      vegan: isVegan,
+      vegeterian: isVegeterian,
+    };
+
+    console.log(appliedFilters);
+  }, [isGlutenFree, isLactoseFree, isVegan, isVegeterian]);
+
+  useEffect(() => {
+    navigation.setParams({ save: saveFilters });
+  }, [saveFilters]);
 
   return (
     <View style={styles.screen}>
@@ -38,13 +55,13 @@ const FiltersScreen = props => {
       />
       <FilterSwitch
         label="Vegan"
-        state={isVeganFree}
-        onChage={newValue => setIsVeganFree(newValue)}
+        state={isVegan}
+        onChage={newValue => setIsVegan(newValue)}
       />
       <FilterSwitch
         label="Vegetarian"
-        state={isVegeterianFree}
-        onChage={newValue => setIsVegeterianFree(newValue)}
+        state={isVegeterian}
+        onChage={newValue => setIsVegeterian(newValue)}
       />
     </View>
   );

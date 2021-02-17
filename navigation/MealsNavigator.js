@@ -143,6 +143,15 @@ const FiltersNavigator = () => {
                   }}
                 />
               </HeaderButtons>
+            ),
+            headerRight: () => (
+              <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                <Item
+                  title="Save"
+                  iconName="ios-save"
+                  onPress={navigationData.route.params.save()}
+                />
+              </HeaderButtons>
             )
           }
         }}
