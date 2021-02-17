@@ -225,8 +225,15 @@ const MyTabs = Platform.OS === 'android' ? androidTabs : iosTabs;
 const DrawerNavigator = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
-        <Drawer.Screen name="MealsFavs" component={MyTabs} />
+      <Drawer.Navigator
+        drawerContentOptions={{
+          activeTintColor: Colors.accentColor,
+          labelStyle: {
+            fontFamily: 'open-sans-bold'
+          }
+        }}
+      >
+        <Drawer.Screen name="Meals" component={MyTabs} />
         <Drawer.Screen name="Filters" component={FiltersNavigator} />
       </Drawer.Navigator>
     </NavigationContainer>
