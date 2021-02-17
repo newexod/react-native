@@ -6,17 +6,20 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryMealsScreen from '../screens/CategoryMealsScreen';
 import MealDetailScreen from '../screens/MealDetailScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
+import FiltersScreen from '../screens/FiltersScreen';
 import Colors from '../constants/Colors';
 import CustomHeaderButton from '../components/CustomHeaderButton';
 import { CATEGORIES, MEALS } from '../data/dummy-data';
 
 const Stack = createStackNavigator();
 const Tab = Platform.OS === 'android' ? createMaterialBottomTabNavigator() : createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const MealDetail = () => {
   return (
@@ -54,9 +57,22 @@ const MealsStack = () => {
       <Stack.Screen
         name="Categories"
         component={CategoriesScreen}
-        options={{
-          headerTitle: "Meal Categories",
-          ...navigationOptions,
+        options={(navigationData) => {
+          return {
+            headerTitle: "Meal Categories",
+            ...navigationOptions,
+            headerLeft: () => (
+              <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                <Item
+                  title="Menu"
+                  iconName="ios-menu"
+                  onPress={() => {
+                    navigationData.navigation.toggleDrawer();
+                  }}
+                />
+              </HeaderButtons>
+            )
+          }
         }}
       />
       <Stack.Screen
@@ -84,9 +100,22 @@ const FavNavigatorStack = () => {
       <Stack.Screen
         name="Favorite"
         component={FavoritesScreen}
-        options={{
-          headerTitle: "Your Favorites",
-          ...navigationOptions,
+        options={(navigationData) => {
+          return {
+            headerTitle: "Your Favorites",
+            ...navigationOptions,
+            headerLeft: () => (
+              <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                <Item
+                  title="Menu"
+                  iconName="ios-menu"
+                  onPress={() => {
+                    navigationData.navigation.toggleDrawer();
+                  }}
+                />
+              </HeaderButtons>
+            )
+          }
         }}
       />
       {MealDetail()}
@@ -94,75 +123,112 @@ const FavNavigatorStack = () => {
   );
 };
 
+const FiltersNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Favorite"
+        component={FiltersScreen}
+        options={(navigationData) => {
+          return {
+            headerTitle: "Filtes",
+            ...navigationOptions,
+            headerLeft: () => (
+              <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                <Item
+                  title="Menu"
+                  iconName="ios-menu"
+                  onPress={() => {
+                    navigationData.navigation.toggleDrawer();
+                  }}
+                />
+              </HeaderButtons>
+            )
+          }
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const iosTabs = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        tabBarOptions={iosTabBarOptions}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+    <Tab.Navigator
+      tabBarOptions={iosTabBarOptions}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
 
-            switch (route.name) {
-              case 'Meals':
-                iconName = 'ios-restaurant';
-                break;
-              case 'Favorites':
-                iconName = 'ios-star';
-                break;
-              default: break;
-            }
+          switch (route.name) {
+            case 'Meals':
+              iconName = 'ios-restaurant';
+              break;
+            case 'Favorites':
+              iconName = 'ios-star';
+              break;
+            default: break;
+          }
 
-            return <Ionicons name={iconName} size={25} color={color} />;
-          },
-        })}
-      >
-        <Tab.Screen
-          name="Meals"
-          component={MealsStack}
-        />
-        <Tab.Screen
-          name="Favorites"
-          component={FavNavigatorStack}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+          return <Ionicons name={iconName} size={25} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen
+        name="Meals"
+        component={MealsStack}
+      />
+      <Tab.Screen
+        name="Favorites"
+        component={FavNavigatorStack}
+      />
+    </Tab.Navigator>
   );
 };
 
 const androidTabs = () => {
   return (
+    <Tab.Navigator
+      {...androidTabBarOptions}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          switch (route.name) {
+            case 'Meals':
+              iconName = 'ios-restaurant';
+              break;
+            case 'Favorites':
+              iconName = 'ios-star';
+              break;
+            default: break;
+          }
+
+          return <Ionicons name={iconName} size={25} color={color} />;
+        },
+        tabBarColor: route.name === 'Meals' ? Colors.primaryColor : Colors.accentColor
+      })}
+    >
+      <Tab.Screen
+        name="Meals"
+        component={MealsStack}
+      />
+      <Tab.Screen
+        name="Favorites"
+        component={FavNavigatorStack}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const MyTabs = Platform.OS === 'android' ? androidTabs : iosTabs;
+
+const DrawerNavigator = () => {
+  return (
     <NavigationContainer>
-      <Tab.Navigator
-        {...androidTabBarOptions}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            switch (route.name) {
-              case 'Meals':
-                iconName = 'ios-restaurant';
-                break;
-              case 'Favorites':
-                iconName = 'ios-star';
-                break;
-              default: break;
-            }
-
-            return <Ionicons name={iconName} size={25} color={color} />;
-          },
-          tabBarColor: route.name === 'Meals' ? Colors.primaryColor : Colors.accentColor
-        })}
-      >
-        <Tab.Screen
-          name="Meals"
-          component={MealsStack}
-        />
-        <Tab.Screen
-          name="Favorites"
-          component={FavNavigatorStack}
-        />
-      </Tab.Navigator>
+      <Drawer.Navigator>
+        <Drawer.Screen name="MealsFavs" component={MyTabs} />
+        <Drawer.Screen name="Filters" component={FiltersNavigator} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
@@ -186,6 +252,4 @@ const iosTabBarOptions = {
   activeTintColor: Colors.accentColor,
 };
 
-const MyTabs = Platform.OS === 'android' ? androidTabs : iosTabs;
-
-export default MyTabs;
+export default DrawerNavigator;
